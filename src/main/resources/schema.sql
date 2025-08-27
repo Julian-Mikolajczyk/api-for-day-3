@@ -1,0 +1,19 @@
+CREATE TABLE authors (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE books (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  available BOOLEAN DEFAULT TRUE,
+  author_id BIGINT,
+  CONSTRAINT fk_author FOREIGN KEY (author_id) REFERENCES authors(id)
+);
+
+CREATE TABLE loans (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  loan_date TIMESTAMP,
+  book_id BIGINT,
+  CONSTRAINT fk_book FOREIGN KEY (book_id) REFERENCES books(id)
+);

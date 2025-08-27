@@ -1,0 +1,12 @@
+C:\Users\48508\Downloads\dzien 3\library_project\src\main\java\com\example\library\model\Book.java
+C:\Users\48508\Downloads\dzien 3\library_project\src\main\java\com\example\library\model\Author.java
+C:\Users\48508\Downloads\dzien 3\library_project\src\main\java\com\example\library\model\Loan.java
+C:\Users\48508\Downloads\dzien 3\library_project\src\main\java\com\example\library\LibraryApplication.java
+C:\Users\48508\Downloads\dzien 3\library_project\src\main\java\com\example\library\repository\BookRepositoryJdbc.java
+C:\Users\48508\Downloads\dzien 3\library_project\src\main\java\com\example\library\repository\BookRepositoryJpa.java
+C:\Users\48508\Downloads\dzien 3\library_project\src\main\java\com\example\library\controller\BookController.java
+C:\Users\48508\Downloads\dzien 3\library_project\src\main\java\com\example\library\repository\LoanRepository.java
+C:\Users\48508\Downloads\dzien 3\library_project\src\main\java\com\example\library\service\AuthorService.java
+C:\Users\48508\Downloads\dzien 3\library_project\src\main\java\com\example\library\controller\AuthorController.java
+C:\Users\48508\Downloads\dzien 3\library_project\src\main\java\com\example\library\repository\AuthorRepository.java
+C:\Users\48508\Downloads\dzien 3\library_project\src\main\java\com\example\library\service\BookService.java
