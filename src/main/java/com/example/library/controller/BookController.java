@@ -1,7 +1,10 @@
 package com.example.library.controller;
 
 import com.example.library.model.Book;
+import com.example.library.repository.BookRepositoryJdbc;
+import com.example.library.repository.BookRepositoryJpa;
 import com.example.library.service.BookService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,33 +13,37 @@ import java.util.List;
 @RequestMapping("/api/books")
 public class BookController {
     private final BookService service;
-    public BookController(BookService service) { this.service = service; }
+    private final BookRepositoryJpa bookJpa;
+    private final BookRepositoryJdbc bookJdbc;
 
-    // JPA endpoints
-    @GetMapping("/jpa")
-    public List<Book> allJpa() { return service.findAllJpa(); }
+    public BookController(BookService service, BookRepositoryJpa bookJpa, BookRepositoryJdbc bookJdbc) {
+        this.service = service;
+        this.bookJpa = bookJpa;
+        this.bookJdbc = bookJdbc;
+    }
 
+    // --- Stage 6: JPA CRUD & queries ---
     @PostMapping("/jpa")
-    public Book createJpa(@RequestBody Book b) { return service.saveJpa(b); }
+    public Book createJpa(@RequestBody Book b) { return bookJpa.save(b); }
 
-    // JDBC endpoints
-    @GetMapping("/jdbc")
-    public List<Book> allJdbc() { return service.findAllJdbc(); }
+    @GetMapping("/jpa/{id}")
+    public ResponseEntity<Book> getByIdJpa(@PathVariable Long id) {
+        return bookJpa.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
 
-    @PostMapping("/jdbc")
-    public int createJdbc(@RequestBody Book b) { return service.saveJdbc(b); }
+    @GetMapping("/jpa/author/{name}")
+    public List<Book> byAuthorNameJpa(@PathVariable String name) { return bookJpa.findByAuthor_Name(name); }
 
-    // Transactional demo
-    @PostMapping("/jpa/loan")
-    public Book createAndLoan(@RequestBody Book b) { return service.createAndLoan(b); }
+    @GetMapping("/jpa/author/id/{authorId}")
+    public List<Book> byAuthorIdJpa(@PathVariable Long authorId) { return bookJpa.findByAuthor_Id(authorId); }
 
-    @PostMapping("/jpa/fail")
-    public String createAndFail(@RequestBody Book b) {
-        try {
-            service.createAndFail(b);
-            return "should not happen";
-        } catch (Exception ex) {
-            return "transaction rolled back: " + ex.getMessage();
-        }
+    // Keep existing endpoints via service, if any (not shown in this skeleton)
+    @GetMapping("/jpa")
+    public List<Book> allJpa() { return bookJpa.findAll(); }
+
+    // --- Stage 7: JDBC author-based query ---
+    @GetMapping("/jdbc/author/{name}")
+    public List<Book> byAuthorNameJdbc(@PathVariable String name) {
+        return bookJdbc.findByAuthorName(name);
     }
 }

@@ -7,7 +7,6 @@ import com.example.library.repository.BookRepositoryJpa;
 import com.example.library.repository.LoanRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -28,11 +27,6 @@ public class BookService {
     public Book findByIdJpa(Long id) { return bookJpa.findById(id).orElse(null); }
     public Book saveJpa(Book b) { return bookJpa.save(b); }
     public void deleteJpa(Long id) { bookJpa.deleteById(id); }
-
-    public List<Book> findByAuthor(@PathVariable String author) {
-        return bookJpa.findByAuthor(author);
-    }
-
 
     // JDBC CRUD
     public List<Book> findAllJdbc() { return bookJdbc.findAll(); }

@@ -18,19 +18,22 @@ public class BookRepositoryJdbc {
         this.jdbc = jdbc;
     }
 
-    private RowMapper<Book> bookMapper = (RowMapper) (rs, rowNum) -> {
-        Book b = new Book();
-        b.setId(rs.getLong("id"));
-        b.setTitle(rs.getString("title"));
-        b.setAvailable(rs.getBoolean("available"));
-        Long authorId = rs.getLong("author_id");
-        if (authorId != 0) {
-            Author a = new Author();
-            a.setId(authorId);
-            a.setName(rs.getString("author_name"));
-            b.setAuthor(a);
+    private RowMapper<Book> bookMapper = new RowMapper<Book>() {
+        @Override
+        public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Book b = new Book();
+            b.setId(rs.getLong("id"));
+            b.setTitle(rs.getString("title"));
+            b.setAvailable(rs.getBoolean("available"));
+            Long authorId = rs.getLong("author_id");
+            if (authorId != 0) {
+                Author a = new Author();
+                a.setId(authorId);
+                a.setName(rs.getString("author_name"));
+                b.setAuthor(a);
+            }
+            return b;
         }
-        return b;
     };
 
     public List<Book> findAll() {
@@ -56,5 +59,25 @@ public class BookRepositoryJdbc {
     public int deleteById(Long id) {
         String sql = "DELETE FROM books WHERE id = ?";
         return jdbc.update(sql, id);
+    }
+
+    public List<Book> findByAuthorName(String authorName) {
+        String sql = "SELECT b.id, b.title, b.available, a.id AS a_id, a.name AS a_name " +
+                     "FROM books b JOIN authors a ON b.author_id = a.id " +
+                     "WHERE LOWER(a.name) LIKE LOWER(?)";
+        return jdbc.query(sql, new Object[]{authorName}, new RowMapper<Book>() {
+            @Override
+            public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Author a = new Author();
+                a.setId(rs.getLong("a_id"));
+                a.setName(rs.getString("a_name"));
+                Book b = new Book();
+                b.setId(rs.getLong("id"));
+                b.setTitle(rs.getString("title"));
+                b.setAvailable(rs.getBoolean("available"));
+                b.setAuthor(a);
+                return b;
+            }
+        });
     }
 }
